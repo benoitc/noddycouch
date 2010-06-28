@@ -67,4 +67,12 @@ db.saveDoc(doc, {
     })
     
   }
+});
+
+db.all_docs({
+  success: function(docs) {
+    
+    sys.puts("all docs total rows:" + docs.total_rows )
+    
+  }
 })
