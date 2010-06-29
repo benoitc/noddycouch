@@ -57,8 +57,6 @@ var doc = {
 db.saveDoc(doc, {
   success: function(doc) {
     sys.puts("doc saved: (" + doc.id + "," +  doc.rev +")");
-    
-    
     db.openDoc(doc.id, {
       success: function(doc1) {
         sys.puts("test = " + doc1.test);
