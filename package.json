@@ -1,0 +1,25 @@
+{
+  "name": "noddycouch",
+  "version": "0.1",
+  "description": "minimal couchdb toolkit for nodejs.",
+  "keywords": [
+    "couchdb",
+    "nodejs"
+  ],
+  "maintainers": [{
+    "name": "Benoît Chesneau",
+    "email": "benoitc@e-engura.org",
+    "web": "http://github.com/benoitc"
+  }],
+  "licenses": [{
+    "type": "MIT",
+    "url": "http://github.com/benoitc/noddycouch/raw/master/LICENSE"
+  }],
+  "repositories": [
+         {
+              "type": "git", 
+              "url": "http://github.com/benoitc/noddycouch.git",
+         }
+  ]
+  
+}
