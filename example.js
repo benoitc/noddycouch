@@ -3,11 +3,11 @@
  * See the NOTICE for more information. */
 
 var sys = require("sys"),
+    fs = require("fs"),
     noddycouch =require("./lib/noddycouch");
     
     
 s = new noddycouch.Server()
-sys.log("server " + s.uri);
 
 
 s.info({
@@ -67,10 +67,48 @@ db.saveDoc(doc, {
   }
 });
 
-db.all_docs({
+db.allDocs({
   success: function(docs) {
     
     sys.puts("all docs total rows:" + docs.total_rows )
     
   }
 })
+
+
+db.saveDoc({}, {
+  success: function(res) {
+    var res = res;
+    sys.puts("doc saved: (" + res.id + "," +  res.rev +")");
+    var docid = res.id;
+    
+    db.putAttachment(res.id, "test content", "test", {
+      success: function(res1) {
+        db.fetchAttachment(docid, "test", {
+          success: function(content) {
+            sys.puts("fetched attachment :" + content)
+          }
+        });
+      }
+    });
+  }
+});
+
+
+db.saveDoc({}, {
+  success: function(res) {
+    var res = res;
+    sys.puts("notice doc saved: (" + res.id + "," +  res.rev +")");
+    var docid = res.id;
+    
+    db.fputAttachment(res.id, "./NOTICE", "NOTICE", {
+      success: function(res1) {
+        db.fetchAttachment(docid, "NOTICE", {
+          success: function(content) {
+            sys.puts("fetched NOTICE :" + content)
+          }
+        });
+      }
+    });
+  }
+});
