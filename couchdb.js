@@ -4,11 +4,11 @@
 
 var events = require('events'),
     sys = require('sys'),
-    resource = require('./noddycouch/resource'),
+    resource = require('./resource'),
     url = require('url'),
     fs = require('fs'),
     rpath = require('path'),
-    mime = require('./noddycouch/mime');
+    mime = require('./util/mime');
     
 var Server = function(uri) {
   resource.Resource.call(this, uri)
@@ -42,7 +42,6 @@ Server.prototype.replicate = function(options) {
 
 Server.prototype.uuids = function(options) {
   this.get("/_uuids", options);
-  
 }
 
 var Uuids = function(uri) {

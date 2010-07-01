@@ -4,10 +4,10 @@
 
 var sys = require("sys"),
     fs = require("fs"),
-    noddycouch =require("./lib/noddycouch");
+    couchdb =require("../couchdb");
     
     
-s = new noddycouch.Server()
+s = new couchdb.Server()
 
 
 s.info({
@@ -30,7 +30,7 @@ s.all_dbs({
 
 s.create_db("testdb")
 
-var db = new noddycouch.Database("http://127.0.0.1:5984/testdb");
+var db = new couchdb.Database("http://127.0.0.1:5984/testdb");
 
 db.info({
   responseEncoding: "binary",

@@ -7,7 +7,7 @@ var events = require('events'),
     sys = require('sys'),
     http = require('http'),
     url = require('url'),
-    utils = require('./utils');
+    utils = require('./util/misc');
  
 
 var HttpError = function(type, status, body) {
@@ -96,9 +96,7 @@ Resource.prototype.request = function(args) {
     // prepare request
   var couchdb = http.createClient(this.port, this.host);
 
-  
-  
-  var request = couchdb.request(method.toUpperCase(), uri, headers)
+  var request = couchdb.request(method.toUpperCase(), uri, headers);
   
   if (payload) {
     

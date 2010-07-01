@@ -1,5 +1,5 @@
 var sys = require("sys"),
-    Consumer = require('./lib/noddycouch').Consumer;
+    Consumer = require('../couchdb').Consumer;
 
 var c = new Consumer("http://127.0.0.1:5984/testdb");
 
