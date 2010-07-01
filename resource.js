@@ -173,37 +173,39 @@ Resource.prototype._wait_response = function(request, options) {
   var self = this;
     
   request.addListener("response", function(response) {
-    request.end()
     if (options.startResponse) options.startResponse(response);
 
-    var buff = "";
+    var buf = [];
     var status = response.statusCode;
     var error = "";
+    
     response.setEncoding(options.responseEncoding || 'utf8');
+    
     response
       .addListener("data", function(chunk) {
-        buff += chunk;
+        buf.push(chunk);
       })
       .addListener("end", function() {
+        body = buf.join("");
+        
         if (status >= 400) {
                       
           if (options.error) {
             error = utils.httpError(status)
-            return options.error(error, status, buff);
+            return options.error(error, status, body);
           }
           return;
         } else if (options.success) {
           if (options.responseEncoding == "binary") {
-            return options.success(buff, status);
+            return options.success(body, status);
           } else {
             try {
-              json = JSON.parse(buff);
+              json = JSON.parse(body);
+              return options.success(json, status);
             } catch (e) {
-              if (options.error) {
-                return options.error("json_error", e.message, buff);
-              }
-            }
-            return options.success(json, status);
+              if (options.error) 
+                return options.error("json_error", e.message, body);
+            } 
           }
         }
        
