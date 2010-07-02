@@ -176,9 +176,7 @@ var types = {
  * where _path_ may be an extension, or full
  * file path.
  *
- * By default 'application/octet-stream' is returned,
- * however this can be altered using the 'default mime type'
- * setting.
+ * If no match exists, the undefined value is returned.
  *
  *   mime('png')               // => 'image/png'
  *   mime('.png')              // => 'image/png'
@@ -187,7 +185,6 @@ var types = {
  *
  * @param  {string} path
  * @return {string}
- * @settings 'default mime type'
  * @api public
  */
 
@@ -199,6 +196,5 @@ function extname(path) {
 exports.mime = function(path) {
   return types[path] || 
          types[extname(path)] || 
-         'text/html' || 
-         'application/octet-stream' 
+         undefined
 }

@@ -117,6 +117,7 @@ db.saveDoc({"for": "NOTICE"}, {
     var docid = res.id;
     
     db.fputAttachment(res.id, "./NOTICE", "NOTICE", {
+      headers: {"content-type": "text/plain"},
       success: function(res1) {
         sys.puts("NOTICE file attached");
         db.fetchAttachment(docid, "NOTICE", {

@@ -317,12 +317,14 @@ Database.prototype.fputAttachment = function() {
   } 
   
   fpath = fs.realpathSync(fpath);
-  // detect content-type
 
-  ext = rpath.extname(fpath)
-  if (ext) ext = ext.substr(1)
-  ctype = mime.mime(ext) || 'application/octet-stream';
-  headers["content-type"] = ctype;
+  // detect content-type
+  if (!headers["content-type"]) {
+    ext = rpath.extname(fpath)
+    if (ext) ext = ext.substr(1)
+    ctype = mime.mime(ext) || 'application/octet-stream';
+    headers["content-type"] = ctype;
+  }
   
   // get file size
   stats = fs.statSync(fpath)
