@@ -2,7 +2,8 @@
  * This file is part of noddycouch released under the MIT license. 
  * See the NOTICE for more information. */
  
-var events = require('events'),
+var base64 = require('./util/base64');
+    events = require('events'),
     fs = require('fs'),
     sys = require('sys'),
     http = require('http'),
