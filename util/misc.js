@@ -65,7 +65,7 @@ exports.httpError = function(statusCode) {
   var error = "unknown";
   if (statusCode == 404) {
     error = "not_found";
-  } else if (statusCode == 401 || status == 403) {
+  } else if (statusCode == 401 || statusCode == 403) {
     error = "not_authorized";
   } else if (statusCode == 409) {
     error = "conflict";

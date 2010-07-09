@@ -202,11 +202,12 @@ Resource.prototype._wait_response = function(request, options) {
           } else {
             try {
               json = JSON.parse(body);
-              return options.success(json, status);
             } catch (e) {
               if (options.error) 
                 return options.error("json_error", e.message, body);
+              throw e;
             } 
+            return options.success(json, status);
           }
         }
        

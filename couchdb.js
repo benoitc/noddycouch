@@ -30,6 +30,10 @@ Server.prototype.delete_db = function(dbname, options) {
   
 }
 
+Server.prototype.database = function(dbname, options) {
+  return new Database(this.uri + "/" + dbname);
+}
+
 Server.prototype.all_dbs = function(options) { 
   this.get("/_all_dbs", options);
   
@@ -80,7 +84,7 @@ Uuids.prototype.uuid = function(options) {
       },
       error: function() {
         if (options && options.error) {
-          options.errors(arguments);
+          options.error(arguments);
         }
       }
       
@@ -188,7 +192,7 @@ Database.prototype.deleteDoc = function(doc_or_id, options) {
         delete_doc(docid, rev);
       },
       error: function(error, msg, buff) {
-        if (options && options.errors) {
+        if (options && options.error) {
           options.error(error, msg, buff)
         }
       }
@@ -230,36 +234,29 @@ Database.prototype.deleteDocs = function(docs, options) {
   });
   this.saveDocs(docs, options);
   
-} 
-
-Database.prototype.allDocs = function(options) {
-  var options = options || {};
-  var params = options.params || {}
-  
-  if ( params && params.keys) {
-    var keys = params.keys;
-    delete options.params["keys"];
-    this.post("/_all_docs", {keys: keys}, options);
-  } else {
-    this.get("/_all_docs", options);
-  }
 }
 
-Database.prototype.view = function(name, options) {
+function _view(db, docid, options) {
   var options = options || {};
   var params = options.params || {}
   
-  [dname, vname] = name.split("/");
-  docid = "/_design/" + dname + "/vname";
-
   if (params && params.keys) {
     var keys = params.keys;
     delete options.params["keys"];
-    this.post(docid, {keys: keys}, options);
+    db.post(docid, {keys: keys}, options);
   } else {
-    this.get(docid, options);
+    db.get(docid, options);
   }
-  
+}
+
+Database.prototype.allDocs = function(options) {
+  return _view(this, "/_all_docs", options);
+}
+
+Database.prototype.view = function(design, view, options) {
+  // Accept '_design/foo' or just 'foo'
+  design = design.replace(/^_design\//, '');
+  return _view(this, '/_design/' + design + '/_view/' + view, options);
 }
 
 Database.prototype.fetchAttachment = function(docid, name, options) {
@@ -285,7 +282,7 @@ Database.prototype.putAttachment = function(docid, payload, name, options) {
         self.put(path, payload, options);
       },
       error: function(error, msg, buff) {
-        if (options && options.errors) {
+        if (options && options.error) {
           options.error(error, msg, buff)
         }
       }
@@ -357,7 +354,7 @@ Database.prototype.delAttachment = function(docid, name, options) {
         
       },
       error: function(error, msg, buff) {
-        if (options && options.errors) {
+        if (options && options.error) {
           options.error(error, msg, buff)
         }
       }
@@ -399,7 +396,7 @@ Database.prototype.copyDoc = function() {
         self.copy("/" + docid, options);
       },
       error: function() {
-        if (options.errors) options.errors(arguments);
+        if (options.error) options.error(arguments);
       }
     });
   } else if (typeof(dest) == "string") {
@@ -416,7 +413,12 @@ Database.prototype.copyDoc = function() {
       })
       
     } catch (e) {
-      if (options.errors) options.errors(e[0], e[1], '')
+      if (options.error) {
+        options.error(e[0], e[1], '');
+      }
+      else {
+        sys.debug("Ignoring exception in Database.copyDoc():\n" + sys.inspect(e));
+      }
     }
     
   } else {
@@ -456,7 +458,9 @@ Consumer.prototype.wait = function(params) {
               return
             }
             
-          } catch(e) {}
+          } catch(e) {
+            sys.debug("Ignoring exception in Consumer.wait():\n" + sys.inspect(e));
+          }
       }
       
       response
